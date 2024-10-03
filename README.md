@@ -28,6 +28,9 @@ Vous pouvez installer les dépendances nécessaires avec la commande suivante :
 pip install -r requirements.txt
 ```
 
+## Formation Suivie
+Ce projet s'inspire du cours sur l'apprentissage par renforcement profond (Deep Reinforcement Learning) proposé par [Hugging Face](https://huggingface.co/learn/deep-rl-course/unit0/introduction). Ce cours offre une introduction approfondie à l'apprentissage par renforcement, couvrant les bases théoriques ainsi que des applications pratiques à travers des exemples concrets.
+
 ## Rapport
 Un rapport détaillant l'approche utilisée, les résultats et les améliorations possibles est disponible dans le fichier `Rapport_TX.pdf`. Ce document est conçu pour aider toute personne souhaitant approfondir ou continuer ce projet.
 
