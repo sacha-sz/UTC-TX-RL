@@ -1,39 +1,131 @@
-# Agent - Apprentissage par Renforcement
+# TX - Apprentissage par Renforcement en Labyrinthe
 
-## Description du Projet
-Ce projet a pour objectif de développer un agent capable d'apprendre à travers **l'apprentissage par renforcement** (Reinforcement Learning) et de l'appliquer à un jeu simple de type labyrinthe. L'agent devra explorer le labyrinthe pour trouver une clé, puis un coffre, en s'appuyant sur une **Q-table** pour naviguer efficacement. Une interface utilisateur (GUI) permet de sélectionner différents niveaux de difficulté et de visualiser l'apprentissage de l'agent à travers une animation sous forme de GIF.
+Ce dépôt regroupe les travaux réalisés dans le cadre d'une **TX** (travail en autonomie) à l'UTC, portant sur l'**apprentissage par renforcement** (Reinforcement Learning).
 
-## Objectifs du Projet
-1. **Compréhension de l'apprentissage par renforcement** : Apprendre les concepts de base et les principes du Reinforcement Learning.
-2. **Mise en pratique** : Implémenter un agent qui résout un problème simple dans un environnement de labyrinthe.
-3. **Création d'un jeu** : Le jeu consiste à naviguer dans un labyrinthe pour récupérer une clé et ouvrir un coffre en se basant sur l'amélioration continue via une Q-table.
-4. **Documentation et rapport** : Fournir un rapport détaillé pour faciliter la reprise du projet par d'autres utilisateurs.
-5. **Interface graphique (GUI)** : Proposer une interface simple permettant de choisir le niveau de difficulté, de lancer l'apprentissage et d'afficher un GIF du déplacement de l'agent.
+Le projet consiste à entraîner un agent à naviguer dans des labyrinthes à difficulté croissante. L'agent doit récupérer une clé puis ouvrir un coffre, en apprenant une politique optimale grâce à un algorithme de **Q-learning**. Une interface graphique permet de sélectionner le niveau, de lancer l'entraînement et de visualiser le résultat sous forme de GIF animé.
+
+<br/>
+
+## Vue d'ensemble
+
+| Composant | Description |
+|-----------|-------------|
+| `main.py` | Point d'entree - lance l'interface graphique |
+| `src/env.py` | Classe `Env_level` - environnement du labyrinthe |
+| `src/agent.py` | Algorithme Q-learning (Q-table, epsilon-greedy, enregistrement GIF) |
+| `src/gui.py` | Interface graphique Tkinter |
+| `levels/` | 8 niveaux de labyrinthe au format texte, de difficulte croissante |
+| `tests/` | Tests unitaires (pytest) |
+| `docs/Rapport_TX.pdf` | Rapport detaille de la methodologie, des choix techniques et des resultats |
+| `outputs/agent.gif` | GIF genere automatiquement apres l'entrainement |
+
+<br/>
+
+## Environnement
+
+Le labyrinthe est représenté par une grille dont chaque case correspond à un type d'élément :
+
+| Symbole | Type | Description |
+|---------|------|-------------|
+| `#` | Mur | Case infranchissable |
+| `.` | Vide | Case accessible |
+| `P` | Joueur | Position initiale de l'agent |
+| `K` | Clé | A récupérer avant le coffre |
+| `C` | Coffre | Objectif final |
+| `L` | Lave | Case pénalisante |
+| `B` | Mur cassable | Franchissable au coût d'une pénalité |
+
+L'agent dispose de 4 actions possibles : haut, bas, gauche, droite. L'état encode la position de l'agent, la possession de la clé et la présence de murs cassables adjacents.
+
+---
+
+### Système de récompenses
+
+| Evenement | Récompense |
+|-----------|-----------|
+| Récupérer la clé | +100 |
+| Ouvrir le coffre | +100 |
+| Tomber dans la lave | -100 |
+| Frapper un mur | -10 |
+| Sortir des limites | -10 |
+| Casser un mur | -5 |
+| Chaque action | -1 |
+
+---
+
+### Niveaux disponibles
+
+8 niveaux de difficulté croissante sont disponibles dans le dossier `levels/`, de `level_1.txt` à `level_8.txt`. Chaque niveau introduit de nouveaux obstacles (lave, murs cassables, chemins complexes).
+
+<br/>
 
 ## Fonctionnalités
-- **Apprentissage par Renforcement** : Utilisation de l'algorithme Q-learning pour optimiser le comportement de l'agent dans le labyrinthe.
-- **Interface Utilisateur** : Sélection du niveau, lancement de l'apprentissage et visualisation du parcours de l'agent sous forme de GIF.
-- **Visualisation de l'apprentissage** : Génération automatique d'un GIF (`agent.gif`) qui montre les déplacements de l'agent dans le labyrinthe.
-- **Rapport** : Le projet est accompagné d'un rapport détaillé (disponible dans le fichier `Rapport_TX.pdf`) qui explique la méthodologie utilisée, les choix techniques et les résultats obtenus.
 
-![Exemple d'interface](GUI_RL.png)
+- **Q-learning** - Apprentissage d'une politique optimale via une Q-table mise à jour à chaque épisode.
+- **Interface graphique** - Sélection du niveau, lancement de l'entraînement et visualisation en temps réel.
+- **Génération de GIF** - Export automatique du parcours optimal de l'agent après entraînement (`outputs/agent.gif`).
+- **Rapport** - Document `docs/Rapport_TX.pdf` décrivant la méthodologie, les résultats et les pistes d'amélioration.
 
-## Prérequis
-Avant d'exécuter ce projet, assurez-vous d'avoir installé les dépendances suivantes :
-- Python 3.x
-- Bibliothèques Python : `numpy`, `matplotlib`, `tkinter`, etc.
+![Exemple d'interface](docs/GUI_RL.png)
 
-Vous pouvez installer les dépendances nécessaires avec la commande suivante :
+<br/>
+
+## Utilisation
+
+Un environnement Python 3 suffit. Installez les dépendances puis lancez le programme principal.
+
 ```bash
+# Cloner le dépôt
+git clone https://github.com/sacha-sz/UTC-TX-RL.git
+cd UTC-TX-RL
+
+# Installer les dépendances
 pip install -r requirements.txt
+
+# Lancer l'application
+python main.py
 ```
 
-## Formation Suivie
-Ce projet s'inspire du cours sur l'apprentissage par renforcement profond (Deep Reinforcement Learning) proposé par [Hugging Face](https://huggingface.co/learn/deep-rl-course/unit0/introduction). Ce cours offre une introduction approfondie à l'apprentissage par renforcement, couvrant les bases théoriques ainsi que des applications pratiques à travers des exemples concrets.
+**Commandes disponibles via Makefile :**
 
-## Rapport
-Un rapport détaillant l'approche utilisée, les résultats et les améliorations possibles est disponible dans le fichier `Rapport_TX.pdf`. Ce document est conçu pour aider toute personne souhaitant approfondir ou continuer ce projet.
+```bash
+make install      # Installer les dépendances
+make run          # Lancer l'application
+make test         # Exécuter les tests
+make lint         # Vérifier le style du code
+make clean        # Nettoyer les fichiers générés
+```
+
+1. Sélectionner un niveau dans l'interface graphique.
+2. Lancer l'entraînement - l'agent apprend en simulant plusieurs épisodes.
+3. Visualiser le GIF généré (`outputs/agent.gif`) représentant le parcours optimal trouvé.
+
+<br/>
+
+## Technologies utilisées
+
+- **Python 3** - langage principal
+- **NumPy** - représentation de la grille et calcul de la Q-table
+- **Matplotlib** - rendu visuel du labyrinthe
+- **Tkinter** - interface graphique
+- **Pillow / imageio** - génération du GIF animé
+
+<br/>
+
+## Références
+
+- [Cours Deep RL - Hugging Face](https://huggingface.co/learn/deep-rl-course/unit0/introduction)
+- [UTC - Université de Technologie de Compiègne](https://www.utc.fr/)
+
+<br/>
 
 ## Auteurs
-- [Sacha S.](github.com/sacha-sz)
-- [Theo D.](github.com/theodubus)
+
+- **[@sacha-sz](https://github.com/sacha-sz)**
+- **[@theodubus](https://github.com/theodubus)**
+
+<br/>
+
+## Licence
+
+Ce projet est distribué sous licence **MIT** - voir le fichier [LICENSE](LICENSE) pour plus d'informations.
